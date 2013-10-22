@@ -54,21 +54,27 @@ namespace LibTabCharter
 
             String strBuf = "";
             int lineCount = 0;
-
-            while ((strBuf = mSR.ReadLine()) != null)
+            try
             {
-                if (lineCount == num)
+                while ((strBuf = mSR.ReadLine()) != null)
                 {
-                    MatchCollection mc = mRex.Matches(strBuf);
-                    for (int i = 0; i < mc.Count; i++)
+                    if (lineCount == num)
                     {
-                        retval.Add(mc[i].Value);
+                        MatchCollection mc = mRex.Matches(strBuf);
+                        for (int i = 0; i < mc.Count; i++)
+                        {
+                            retval.Add(mc[i].Value);
+                        }
+
+                        break;
                     }
 
-                    break;
+                    lineCount++;
                 }
-
-                lineCount++;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
 
             return retval;
@@ -98,6 +104,14 @@ namespace LibTabCharter
 
             return retval;
             //return getLineBase();
+        }
+
+        public int GetLineCount()
+        {
+            int retval = mSR.ReadToEnd().Split('\n').Length;
+            Close();
+            Open();
+            return retval;
         }
 
         /*public int getHeaderByteLen()
